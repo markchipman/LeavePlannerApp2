@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using LeavePlannerApp2.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using LeavePlannerApp2.Models;
 
 namespace LeavePlannerApp2
 {
@@ -37,9 +38,14 @@ namespace LeavePlannerApp2
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            //services.AddDefaultIdentity<IdentityUser>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddIdentity<MyUserStore, MyUserRole>(cfg => {
+                cfg.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddTransient<Seeder>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -50,6 +56,7 @@ namespace LeavePlannerApp2
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                
             }
             else
             {
@@ -68,6 +75,17 @@ namespace LeavePlannerApp2
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                //seeding the database 
+                if (env.IsDevelopment())
+                {
+                    using (var scope = app.ApplicationServices.CreateScope())
+                    {
+                        var seeder = scope.ServiceProvider.GetService<Seeder>();
+                            seeder.EmployeeSeeder().Wait(); 
+                    }
+                }
+                
             });
         }
     }
