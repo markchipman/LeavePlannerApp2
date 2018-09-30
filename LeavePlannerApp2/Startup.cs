@@ -13,11 +13,14 @@ using LeavePlannerApp2.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using LeavePlannerApp2.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using LeavePlannerApp2.Areas.Identity.Services;
 
 namespace LeavePlannerApp2
 {
     public class Startup
     {
+      
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -45,8 +48,19 @@ namespace LeavePlannerApp2
 
             services.AddIdentity<MyUserStore, MyUserRole>(cfg => {
                 cfg.User.RequireUniqueEmail = true;
+                cfg.SignIn.RequireConfirmedEmail = true;
+               
             }).AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddTransient<Seeder>();
+            services.AddTransient<IEmailSender, EmailSender>(i =>
+                new EmailSender(
+                    Configuration["EmailSender:Host"],
+                    Configuration.GetValue<int>("EmailSender:Port"),
+                    Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+                    Configuration["EmailSender:UserName"],
+                    Configuration["EmailSender:Password"]
+                )
+            );
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
