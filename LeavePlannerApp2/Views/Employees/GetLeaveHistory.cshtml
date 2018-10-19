@@ -1,0 +1,37 @@
+﻿@model List<LeaveApplication>
+
+
+<div class="content container-fluid">
+    <div class="row">
+        <div class="col-sm-8">
+            <h4 class="page-title">Activities</h4>
+        </div>
+    </div>
+    @foreach (var item in Model)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="activity">
+                    <div class="activity-box">
+                        <ul class="activity-list">
+                            <li>
+                                <div class="activity-user">
+                                    <a href="profile.html" title="Lesley Grauer" data-toggle="tooltip" class="avatar">
+                                        <img alt="Lesley Grauer" src="~/assets/img/user.jpg" class="img-responsive img-circle">
+                                    </a>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="timeline-content">
+                                        <a href="#" class="name">You applied for leave</a> on these day and was approved
+                                        <span class="time">@item.DateFrom  @item.DateTo</span>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    </div>

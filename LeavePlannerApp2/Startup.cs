@@ -15,6 +15,10 @@ using Microsoft.Extensions.DependencyInjection;
 using LeavePlannerApp2.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using LeavePlannerApp2.Areas.Identity.Services;
+using LeavePlannerApp2.Models.IRepository;
+using LeavePlannerApp2.Models.Repository;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace LeavePlannerApp2
 {
@@ -41,7 +45,10 @@ namespace LeavePlannerApp2
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            
+            services.AddSingleton<IFileProvider>(
+               new PhysicalFileProvider(
+                   Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+
 
             //services.AddDefaultIdentity<IdentityUser>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -52,16 +59,26 @@ namespace LeavePlannerApp2
                
             }).AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddTransient<Seeder>();
-            services.AddTransient<IEmailSender, EmailSender>(i =>
-                new EmailSender(
-                    Configuration["EmailSender:Host"],
-                    Configuration.GetValue<int>("EmailSender:Port"),
-                    Configuration.GetValue<bool>("EmailSender:EnableSSL"),
-                    Configuration["EmailSender:UserName"],
-                    Configuration["EmailSender:Password"]
-                )
-            );
+            //services.AddTransient<IEmailSender, EmailSender>(i =>
+            //    new EmailSender(
+            //        Configuration["EmailSender:Host"],
+            //        Configuration.GetValue<int>("EmailSender:Port"),
+            //        Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+            //        Configuration["EmailSender:UserName"],
+            //        Configuration["EmailSender:Password"]
+            //    )
+            //);
+            services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddTransient<IDept, DepartmentRepo>();
+            services.AddTransient<IEmployee, EmployeeRepo>();
+            services.AddTransient<ILeaveRepo, LeaveRepo>();
+            services.Configure<AuthMessageSenderOptions>(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        }
+
+        private void DepartmentRepo()
+        {
+            throw new NotImplementedException();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

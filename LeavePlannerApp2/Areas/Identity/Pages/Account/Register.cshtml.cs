@@ -36,6 +36,10 @@ namespace LeavePlannerApp2.Areas.Identity.Pages.Account
         [BindProperty]
         public InputModel Input { get; set; }
 
+      
+        [BindProperty]
+        public Employee Employee { get; set; }
+
         public string ReturnUrl { get; set; }
 
         public class InputModel
@@ -57,8 +61,11 @@ namespace LeavePlannerApp2.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
         }
 
-        public void OnGet(string returnUrl = null)
+        public void OnGet(Employee employee,string returnUrl = null)
         {
+            Employee.EmployeeNumber = Request.Query["FirstNumber"];
+            Employee.FirstName = Request.Query["FirstName"];
+            Employee.LastName = Request.Query["LastName"];
             ReturnUrl = returnUrl;
         }
 
@@ -67,8 +74,16 @@ namespace LeavePlannerApp2.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new MyUserStore { UserName = Input.Email, Email = Input.Email };
+                var user = new MyUserStore {
+                                            UserName = Input.Email,
+                                            Email = Input.Email,
+                                            FirstName = Employee.FirstName,
+                                            LastName = Employee.LastName,
+                                            EmployeeNumber = Employee.EmployeeNumber
+                                           };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
+ 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");

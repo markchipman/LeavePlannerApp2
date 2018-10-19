@@ -5,10 +5,70 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+
     <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        <ul class="nav navbar-nav navbar-right user-menu pull-right">
+            @if (User.IsInRole(MyRoles.Admin))
+            {
+                <li>
+                    <a asp-controller="Employees" asp-action="UploadEmployees">Upload Employee Recoreds</a>
+                </li>
+            }
+            else
+            {
+                <li>
+                    <ul class="nav navbar-nav navbar-right user-menu pull-right">
+                        <li class="dropdown hidden-xs">
+
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o"></i> <span class="badge bg-purple pull-right">3</span></a>
+                            <div class="dropdown-menu notifications">
+                                <div class="topnav-dropdown-header">
+                                    <span>Notifications</span>
+                                </div>
+                                <div class="drop-scroll">
+                                    <ul class="media-list">
+                                        <li class="media notification-message">
+                                            <a href="activities.html">
+                                                <div class="media-left">
+                                                    <span class="avatar">
+                                                        <img alt="John Doe" src="~/assets/img/user.jpg" class="img-responsive img-circle">
+                                                    </span>
+                                                </div>
+                                                <div class="media-body">
+                                                    <p class="m-0 noti-details"><span class="noti-title">John Doe</span> added new task <span class="noti-title">Patient appointment booking</span></p>
+                                                    <p class="m-0"><span class="notification-time">4 mins ago</span></p>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="topnav-dropdown-footer">
+                                    <a href="activities.html">View all Notifications</a>
+                                </div>
+                            </div>
+
+                        </li>
+
+                    </ul>
+                </li>
+                <li>
+                    <a asp-controller="Employees" asp-action="ApplyForLeave">Apply For Leave</a>
+                </li>
+            }
+
+            <li class="dropdown">
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" class="dropdown-toggle user-link" data-toggle="dropdown" title="Admin">
+                    <span class="user-img">
+                        <img class="img-circle" src="~/assets/img/user.jpg" width="40" alt="Admin">
+                        <span class="status online"></span>
+                    </span>
+                    <span>Hello @UserManager.GetUserName(User)!</span>
+                    <i class="caret"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a asp-controller="Employees" asp-action="Dashboard">My Profile</a></li>
+                </ul>
+                @*<a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>*@
             </li>
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
@@ -19,7 +79,7 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+        <li><a asp-controller="Employees" asp-action="GetEmployeeRecord">Register</a></li>
         <li><a asp-area="Identity" asp-page="/Account/Login">Login</a></li>
     </ul>
 }

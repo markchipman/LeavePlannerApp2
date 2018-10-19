@@ -1,0 +1,66 @@
+﻿@model LeaveApplicationVm
+@{
+    ViewData["Title"] = "ApplyForLeave";
+    var totalday = 0;
+    foreach (var days in Model.LeaveType)
+    {
+        totalday += days.LeaveTypeDays;
+    }
+}
+
+<h2>Apply For Leave</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-controller="LeaveApplications" asp-action="Create" method="post">
+
+            <div class="form-group">
+                <label> Select Leave type :</label>
+                <select asp-for="LeaveType" asp-items="@(new SelectList(Model.LeaveType,"LeaveTypeId","LeaveTypeName"))" class="select floating"></select>
+            </div>
+
+            <label> Date</label>
+            <div>
+                <div>
+                    <label>From</label>
+                    <input type="date" asp-for="DateFrom" min="@DateTime.Now" class="form-control floating datetimepicker" />
+                </div>
+                <div>
+                    <label>To</label>
+                    <input type="date" asp-for="DateTo" class="form-control floating datetimepicker" />
+                </div>
+                <div>
+                    <label>Reason for Leave</label><br />
+                    <textarea asp-for="ReasonForLeave"></textarea>
+                </div>
+                <div>
+                    <label>What are some responsibility you need to handle during your leave ?</label>
+                    <br />
+                    <textarea asp-for="Responsibilities"> </textarea>
+                </div>
+                @if (Model.TotalLeaveDaystaken >= totalday)
+                {
+                    <div>
+                        <h1>You have exceeded you leave day. As such you cannot take any more leave</h1>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <input type="submit" name="name" value="Submit" />
+                    </div>
+                }
+
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementsByName("DateFrom")[0].setAttribute('min', today);
+
+    var today1 = new Date().toISOString().split('T')[0];
+    document.getElementsByName("DateTo")[0].setAttribute('min', today);
+</script>

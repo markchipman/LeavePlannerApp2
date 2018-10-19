@@ -36,13 +36,13 @@ namespace LeavePlannerApp2.Models
                 var result = await _userManager.CreateAsync(user, "P@ssw0rd!");
 
                 //Adding a role to the roles table
-                if (!_roleManager.RoleExistsAsync(Roles.Admin).Result)
+                if (!_roleManager.RoleExistsAsync(MyRoles.Admin).Result)
                 {
                     var roles = new List<MyUserRole>()
                     {
-                        new MyUserRole{Name = Roles.Admin },
-                        new MyUserRole{Name = Roles.HR },
-                        new MyUserRole{Name = Roles.Worker}
+                        new MyUserRole{Name = MyRoles.Admin },
+                        new MyUserRole{Name = MyRoles.HR },
+                        new MyUserRole{Name = MyRoles.Worker}
                     };
                     foreach (var role in roles)
                     {
@@ -50,7 +50,7 @@ namespace LeavePlannerApp2.Models
                     }
 
                 }
-                await _userManager.AddToRoleAsync(user, Roles.Admin);
+                await _userManager.AddToRoleAsync(user, MyRoles.Admin);
                 
 
                 if (result != IdentityResult.Success)

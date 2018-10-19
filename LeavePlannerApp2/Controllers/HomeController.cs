@@ -10,6 +10,11 @@ namespace LeavePlannerApp2.Controllers
 {
     public class HomeController : Controller
     {
+
+        public IActionResult AdminDashboard()
+        {
+            return View();
+        }
         public IActionResult Index()
         {
             return View();

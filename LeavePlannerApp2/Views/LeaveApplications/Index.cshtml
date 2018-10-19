@@ -1,0 +1,99 @@
+﻿@model IEnumerable<LeavePlannerApp2.Models.LeaveApplication>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+@ViewBag.Leave
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DateFrom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReasonForLeave)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Responsibilities)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+       
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateFrom)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReasonForLeave)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Responsibilities)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeaveType)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.LeaveApplicationId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.LeaveApplicationId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.LeaveApplicationId">Delete</a> |
+                    <input type="button" value="Approved"
+                           onclick="Approved(@item.LeaveApplicationId)" /> |
+                    <input type="button" value="Rejected"
+                           onclick="@("Rejected('" + item.LeaveApplicationId + "')")" />
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+</script>
+<script>
+    function Approved(obj) {
+        alert(obj);
+        const Url = "https://localhost:44378/LeaveApplications/Approved?id=" + obj;
+        $.ajax({
+            type: "post",
+            url: Url,
+            success: function (data) {
+                alert("Successful");
+                location.reload();
+            }
+        });
+        // return false;
+    }
+
+    function Rejected(obj) {
+        alert(obj);
+        const Url = "https://localhost:44378/LeaveApplications/Rejected?id=" + obj;
+        $.ajax({
+            type: "post",
+            url: Url,
+            success: function (data) {
+                alert(" Rejection Successful");
+                location.reload();
+            }
+        });
+    }
+</script>

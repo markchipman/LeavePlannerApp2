@@ -1,0 +1,48 @@
+﻿@model LeavePlannerApp2.Models.LeaveApplication
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>LeaveApplication</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DateFrom)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateFrom)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateTo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ReasonForLeave)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ReasonForLeave)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Responsibilities)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Responsibilities)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LeaveType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LeaveType)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.LeaveApplicationId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LeavePlannerApp2.Models
 {
-    public class Roles
+    public class MyRoles
     {
         public const string Admin = "Admin";
         public const string HR = "Human Resourse";

@@ -14,5 +14,13 @@ namespace LeavePlannerApp2.Data
             : base(options)
         {
         }
+
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<LeaveApplication> LeaveApplications { get; set; }
+        public DbSet<LeaveType> LeaveType { get; set; }
+        public DbSet<LeaveAllocationDaysRemaining> DaysRemaining { get; set; }
+        public DbSet<ApprovalANDRejection> ApprovalANDRejections { get; set; }
+   
     }
 }

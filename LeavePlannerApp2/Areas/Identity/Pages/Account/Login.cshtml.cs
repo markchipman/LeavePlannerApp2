@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using LeavePlannerApp2.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using LeavePlannerApp2.Data;
 
 namespace LeavePlannerApp2.Areas.Identity.Pages.Account
 {
@@ -18,11 +21,15 @@ namespace LeavePlannerApp2.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<MyUserStore> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<MyUserStore> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public LoginModel(SignInManager<MyUserStore> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<MyUserStore> signInManager, ILogger<LoginModel> logger, UserManager<MyUserStore> userManager, ApplicationDbContext context)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
+            _context = context;
         }   
 
         [BindProperty]
@@ -72,13 +79,36 @@ namespace LeavePlannerApp2.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                
+                //var user = _userManager.;
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                //if (User.IsInRole(MyRoles.Admin) && result.Succeeded)
+                //{
+                //    _logger.LogInformation("Admin logged in.");
+                //    return LocalRedirect("~/Home/AdminDashboard");
+                //}
+
+                
+                
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    //var user = _context.Users.FirstOrDefault(x => x.Email == Input.Email);
+
+                    //_logger.LogInformation("User logged in.");
+                    //return RedirectToAction("CustomDashboard", new { username = user.UserName});
+
+                    if (User.IsInRole(MyRoles.Admin))
+                    {
+                        return LocalRedirect("~/Home/AdminDashboard");
+                    }
+                    else
+                    {
+                        return LocalRedirect("~/Employees/Dashboard");
+                    }
+                   
+                   // return LocalRedirect("~/Employees/Dashboard");
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -98,6 +128,15 @@ namespace LeavePlannerApp2.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        public IActionResult CustomDashboard(string username)
+        {
+            if (User.IsInRole(MyRoles.Admin))
+            {
+                return RedirectToAction("AdminDashboar","Home");
+            }
+            return LocalRedirect("~/Employees/Dashboard");
         }
     }
 }
